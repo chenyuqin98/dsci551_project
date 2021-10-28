@@ -14,7 +14,6 @@ public class ImpTrainDataDao implements TrainDataDao{
     public ImpTrainDataDao() {
         Database.add(new TrainData(UUID.randomUUID(), "train.csv", "train.csv"));
     }
-
     @Override
     public List<TrainData> retrieveAllTrainData() {
         return Database;

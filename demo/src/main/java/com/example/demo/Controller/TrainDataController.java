@@ -26,6 +26,7 @@ public class TrainDataController {
     @PostMapping
     public String getTrainResult(@RequestBody TrainData response){
         TrainData trainData= trainDataService.getTrainDataByName(response.getName());
+        System.out.println(trainData.getId());
         String result = trainDataService.train(trainData);
         return result;
     }

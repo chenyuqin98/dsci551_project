@@ -33,15 +33,26 @@ public class TrainDataService {
         //利用xgboost训练。
         String path = trainData.getPath();
         //训练过程
-        //...
+        System.out.println("start run python");
+        try {
+            Process proc = Runtime.getRuntime().exec("python ../models_manager/xgboost_.py");
+            BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+            String line=null;
+            // Todo: write line to return result, judge if there are multiple lines;
+            while ((line=in.readLine())!=null){
+                System.out.println("Train mse is: "+line);
+            }
+            proc.waitFor();
+        } catch (Exception e) {return "False";}
+        System.out.println("end run python");
         //返回训练评估值
-        return "there's a 70% chance that this dog will be adopted within 3 days";
+        return "the mse of model is 1.2947489";
     }
 
     public static String testTrain() {
         System.out.println("start run python");
         try {
-            Process proc = Runtime.getRuntime().exec("python /Users/chenyuqin/Desktop/21_fall_codes_and_relative/dsci551/project/models_manager/xgboost_.py");
+            Process proc = Runtime.getRuntime().exec("python ../models_manager/xgboost_.py");
             BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
             String line=null;
             // Todo: write line to return result, judge if there are multiple lines;
