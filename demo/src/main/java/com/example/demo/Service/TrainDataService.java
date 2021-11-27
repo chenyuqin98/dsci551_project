@@ -14,10 +14,10 @@ import java.util.Optional;
 
 @Service
 public class TrainDataService {
-//    public static void main(String[] args) throws Exception {
-//        String rlt = testTrain();
-//        System.out.println(rlt);
-//    }
+    public static void main(String[] args) throws Exception {
+        String rlt = testTrain();
+        System.out.println(rlt);
+    }
     private TrainDataDao trainDataDao;
     @Autowired
     public TrainDataService(TrainDataDao trainDataDao){
@@ -52,12 +52,13 @@ public class TrainDataService {
     public static String testTrain() {
         System.out.println("start run python");
         try {
-            Process proc = Runtime.getRuntime().exec("python ../models_manager/xgboost_.py");
+            String[] args = new String[] { "python", "/Users/chenyuqin/Desktop/21_fall_codes_and_relative/dsci551/project/models_manager/xgboost_.py", "a"};
+            Process proc = Runtime.getRuntime().exec(args);
             BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
             String line=null;
             // Todo: write line to return result, judge if there are multiple lines;
             while ((line=in.readLine())!=null){
-                System.out.println("Train mse is: "+line);
+                System.out.println(line);
             }
             proc.waitFor();
         } catch (Exception e) {return "False";}

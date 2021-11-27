@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import xgboost as xgb
 from sklearn import metrics
-import os
+import sys
 
 
 class MyXgboost:
@@ -14,7 +14,7 @@ class MyXgboost:
             feature_list = ['Age', 'Breed1', 'Breed2', 'Gender', 'Color1', 'Color2',
                             'Color3', 'MaturitySize', 'FurLength', 'Vaccinated', 'Dewormed',
                             'Sterilized', 'Health', 'Quantity', 'Fee', 'State']
-            self.feature_list = feature_list
+        self.feature_list = feature_list
         if path is None:
             path = '/Users/chenyuqin/Desktop/21_fall_codes_and_relative/dsci551/project/data/train/train.csv'
         df=pd.read_csv(path)
@@ -42,8 +42,13 @@ class MyXgboost:
 if __name__=='__main__':
     # print(train_and_get_metrics('train.csv'))
     myXgboost = MyXgboost()
+    print('mse:')
     print(myXgboost.train_and_get_metrics())
-    print(myXgboost.predict())
+    print('predict:')
+    for p in myXgboost.predict():
+        print(p)
+        break
+    # print(sys.argv)
 
 
 

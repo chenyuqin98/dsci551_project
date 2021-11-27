@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -48,9 +50,20 @@ public class TrainController {
             }
         }
         try {
-            PrintWriter out = response.getWriter();
-            out.write("wait for train module");
-        } catch (IOException e) {
+            System.out.println("start run python xgboost");
+            String[] args = new String[] { "python", "/Users/chenyuqin/Desktop/21_fall_codes_and_relative/dsci551/project/models_manager/xgboost_.py", "a"};
+            Process proc = Runtime.getRuntime().exec(args);
+            BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+            String line=null;
+            // Todo: write line to return result, judge if there are multiple lines;
+            while ((line=in.readLine())!=null){
+                PrintWriter out = response.getWriter();
+                out.write(line);
+                out.write("\n");
+            }
+            proc.waitFor();
+            System.out.println("end run python xgboost");
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 
