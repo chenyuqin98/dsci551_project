@@ -26,6 +26,12 @@ public class TrainController {
         this.trainService = trainService;
     }
 
+    @GetMapping("api/Average")
+    @ResponseBody
+    public String getAverage(@RequestParam("metadata") String metadata){
+        return "5";
+    }
+
     @GetMapping("api/metadata")
     @ResponseBody
     public List<String> getMetaData(@RequestParam("name") String name){

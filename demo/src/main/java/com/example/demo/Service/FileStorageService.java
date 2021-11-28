@@ -127,10 +127,6 @@ public class FileStorageService {
             for (int i = 0; i<chunkNum; i++){
                 String chunkName = i+"_"+name;
                 File chunkFile = new File(uploadPath, chunkName);
-                //如果该chunk还没到达，则等待它到达
-//                while(!chunkFile.exists()){
-//                    Thread.sleep(100);
-//                }
                 //将文件读取到byte数组中
                 byte[] bytes = FileUtils.readFileToByteArray(chunkFile);
                 //将bytes数组提供给os写入流中

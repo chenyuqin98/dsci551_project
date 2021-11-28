@@ -52,7 +52,7 @@ public class TrainDataService {
     public static String testTrain() {
         System.out.println("start run python");
         try {
-            String[] args = new String[] { "python", "/Users/chenyuqin/Desktop/21_fall_codes_and_relative/dsci551/project/models_manager/xgboost_.py", "a"};
+            String[] args = new String[] { "python", "C:\\Users\\Admin\\Desktop\\project\\models_manager\\xgboost_.py", "a"};
             Process proc = Runtime.getRuntime().exec(args);
             BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
             String line=null;
