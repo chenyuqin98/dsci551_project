@@ -20,16 +20,65 @@ import java.util.List;
 @Controller
 @CrossOrigin("http://localhost:3000")
 public class TrainController {
+    public static void main(String[] args) throws Exception {
+//        String rlt = getAverage("{\"metadata\":\"Type\"}");
+//        System.out.println(rlt);
+        String rlt2 = predict("0a0e8c15b-1.jpg");
+        System.out.println(rlt2);
+    }
+
     private TrainService trainService;
     @Autowired
     public TrainController(TrainService trainService) {
         this.trainService = trainService;
     }
 
+    @GetMapping("api/predict")
+    @ResponseBody
+    public static String predict(@RequestParam("name") String name){
+        //形参String name是文件名
+         System.out.println(name);
+        //返回预测这个图片将被领养的天数
+        String pred=null;
+        try {
+            System.out.println("start cnn predict");
+            String[] args = new String[] { "python", "/Users/chenyuqin/Desktop/21_fall_codes_and_relative/dsci551/project/models_manager/cnn.py", name};
+            Process proc = Runtime.getRuntime().exec(args);
+            BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+//            while ((avg=in.readLine())!=null){
+//                System.out.println(avg);
+//            }
+            pred=in.readLine();
+            proc.waitFor();
+            System.out.println("end cnn predict");
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(pred);
+        return pred;
+    }
+
     @GetMapping("api/Average")
     @ResponseBody
-    public String getAverage(@RequestParam("metadata") String metadata){
-        return "5";
+    public static String getAverage(@RequestParam("metadata") String metadata) throws IOException, InterruptedException {
+//        System.out.println(metadata);
+        String avg=null;
+        try {
+            System.out.println("start run spark avg");
+            String[] args = new String[] { "python", "/Users/chenyuqin/Desktop/21_fall_codes_and_relative/dsci551/project/data_manager/data_explorer.py", metadata};
+            Process proc = Runtime.getRuntime().exec(args);
+            BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+//            while ((avg=in.readLine())!=null){
+//                System.out.println(avg);
+//            }
+            avg=in.readLine();
+            proc.waitFor();
+            System.out.println("end run spark avg");
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return avg;
     }
 
     @GetMapping("api/metadata")
@@ -57,7 +106,21 @@ public class TrainController {
         }
         try {
             System.out.println("start run python xgboost");
-            String[] args = new String[] { "python", "/Users/chenyuqin/Desktop/21_fall_codes_and_relative/dsci551/project/models_manager/xgboost_.py", "a"};
+            ArrayList<String> arr = new ArrayList<String>();
+            arr.add("python");
+            arr.add("/Users/chenyuqin/Desktop/21_fall_codes_and_relative/dsci551/project/models_manager/xgboost_.py");
+            arr.add("features");
+            for(String feature:features) {
+                System.out.println(feature);
+                arr.add(feature);
+            }
+            arr.add("values");
+            for(String value:values) {
+                System.out.println(value);
+                arr.add(value);
+            }
+            String[] args = new String[arr.size()];
+            args = arr.toArray(args);
             Process proc = Runtime.getRuntime().exec(args);
             BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
             String line=null;
