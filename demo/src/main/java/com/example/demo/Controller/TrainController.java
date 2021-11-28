@@ -26,15 +26,25 @@ public class TrainController {
         this.trainService = trainService;
     }
 
+    @GetMapping("api/predict")
+    @ResponseBody
+    public String predict(@RequestParam("name") String name){
+        //形参String name是文件名
+        //返回预测这个图片将被领养的天数
+        return "3";
+    }
+
     @GetMapping("api/Average")
     @ResponseBody
     public String getAverage(@RequestParam("metadata") String metadata){
+        System.out.println("metadata: "+metadata);
         return "5";
     }
 
     @GetMapping("api/metadata")
     @ResponseBody
     public List<String> getMetaData(@RequestParam("name") String name){
+        System.out.println("filename: "+name);
         List<String> metaData = trainService.getMetaData(name);
         for(String s:metaData){
             System.out.println(s);
