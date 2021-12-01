@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -117,6 +118,7 @@ public class FileStorageService {
 
     }
     public void  orderComposeFile(int chunkNum, String name, String md5) {
+
         //处理流，需要进一步学习记忆关于节点流和处理流的异同和常用IO类
         BufferedOutputStream os = null;
         try{

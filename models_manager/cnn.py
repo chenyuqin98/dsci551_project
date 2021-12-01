@@ -6,12 +6,13 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
+import sys
 
 
-file_path = '/Users/chenyuqin/Desktop/21_fall_codes_and_relative/dsci551/project/data/train/train.csv'
-df=pd.read_csv(file_path)
-df = df[['PetID', 'PhotoAmt', 'AdoptionSpeed']]
-train, test=df[:1000], df[14500:]
+# file_path = '/Users/chenyuqin/Desktop/21_fall_codes_and_relative/dsci551/project/data/train/train.csv'
+# df=pd.read_csv(file_path)
+# df = df[['PetID', 'PhotoAmt', 'AdoptionSpeed']]
+# train, test=df[:1000], df[14500:]
 
 
 def generate_img(df):
@@ -28,7 +29,7 @@ def generate_img(df):
             img = np.transpose(img, [2, 0, 1])/255
             data.append((img, adoptionSpeed))
     return data
-train, test = generate_img(train), generate_img(test)
+# train, test = generate_img(train), generate_img(test)
 
 
 class Net(nn.Module):
@@ -67,41 +68,63 @@ net = Net()
 criterion = nn.MSELoss()
 optimizer = optim.Adam(net.parameters(), lr=0.0001)
 
-
-train_losses, test_losses = [], []
-predicts = []
-for epoch in range(2):
-    running_loss = 0.0
-    i=0
-    train_loss, test_loss = [], []
-    for data in train:
-        inputs, labels = data
-        inputs = torch.from_numpy(np.reshape(inputs, (1,3,300,300))).float()
-        labels = torch.from_numpy(np.reshape(labels, (1,1))).float()
-        optimizer.zero_grad()
-        outputs = net(inputs)
-        loss = criterion(outputs, labels)
-        loss.backward()
-        optimizer.step()
-        train_loss.append(loss.item())
-        running_loss += loss.item()
-        print('epoch:%d, step:%5d loss: %.3f' % (epoch + 1, i + 1, running_loss))
-        i+=1
-        running_loss = 0.0
-    net.eval()
+def train(train, test):
+    train_losses, test_losses = [], []
     predicts = []
-    for data in test:
-        inputs, labels = data
-        inputs = torch.from_numpy(np.reshape(inputs, (1,3,300,300))).float()
-        labels = torch.from_numpy(np.reshape(labels, (1,1))).float()
-        outputs = net(inputs)
-        predicts.append(outputs)
-        loss = criterion(outputs, labels)
-        test_loss.append(loss.item())
-    train_losses.append(np.average(train_loss))
-    test_losses.append(np.average(test_loss))
+    for epoch in range(2):
+        running_loss = 0.0
+        i=0
+        train_loss, test_loss = [], []
+        for data in train:
+            inputs, labels = data
+            inputs = torch.from_numpy(np.reshape(inputs, (1,3,300,300))).float()
+            labels = torch.from_numpy(np.reshape(labels, (1,1))).float()
+            optimizer.zero_grad()
+            outputs = net(inputs)
+            loss = criterion(outputs, labels)
+            loss.backward()
+            optimizer.step()
+            train_loss.append(loss.item())
+            running_loss += loss.item()
+            print('epoch:%d, step:%5d loss: %.3f' % (epoch + 1, i + 1, running_loss))
+            i+=1
+            running_loss = 0.0
+        net.eval()
+        predicts = []
+        for data in test:
+            inputs, labels = data
+            inputs = torch.from_numpy(np.reshape(inputs, (1,3,300,300))).float()
+            labels = torch.from_numpy(np.reshape(labels, (1,1))).float()
+            outputs = net(inputs)
+            predicts.append(outputs)
+            loss = criterion(outputs, labels)
+            test_loss.append(loss.item())
+        train_losses.append(np.average(train_loss))
+        test_losses.append(np.average(test_loss))
 
-print('test loss (mse):')
-print(test_losses[-1])
-print('predict')
-print(predicts[-1])
+def get_input_img(path):
+    data = []
+    img_root_path = '/Users/chenyuqin/Desktop/21_fall_codes_and_relative/dsci551/project/uploads/'
+    if path is None:
+        path = '/Users/chenyuqin/Desktop/21_fall_codes_and_relative/dsci551/project/uploads/0a0e8c15b-1.jpg'
+    else:
+        path = img_root_path+path
+    img = cv2.imread(path)
+    img = cv2.resize(img, (300, 300))
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB) #转成RGB
+    img = np.transpose(img, [2, 0, 1])/255
+    return img
+
+if __name__ == '__main__':
+    # cnn = Net()
+    # path = None
+    path = '0a0e8c15b-1.jpg'
+    if len(sys.argv)>1:
+        path = sys.argv[1]
+    cnn = torch.load('/Users/chenyuqin/Desktop/21_fall_codes_and_relative/dsci551/project/models_manager/cnn.pkl')
+    input = get_input_img(path)
+    input = torch.from_numpy(np.reshape(input, (1, 3, 300, 300))).float()
+    pred = cnn(input)
+    # print(pred.shape, pred[0][0].float())
+    pred = pred.detach().numpy().tolist()
+    print(round(pred[0][0], 2))
