@@ -30,6 +30,7 @@ class DataExplore:
         spark.sparkContext.setLogLevel("WARN")
         file = spark.read.option('header', True).csv(self.path)
         file = file.rdd.repartition(2)
+        # print(file.getNumPartitions())
         file = file.map(lambda r: r[feature])
         file = file.filter(lambda r: r is not None)
         cnt1 = file.count()

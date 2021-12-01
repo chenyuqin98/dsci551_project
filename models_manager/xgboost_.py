@@ -73,14 +73,14 @@ if __name__=='__main__':
                 feature_list.append(sys.argv[i])
             if is_values:
                 value_list.append(float(sys.argv[i]))
-    print(feature_list, value_list)
+    # print(feature_list, value_list)
 
     myXgboost = MyXgboost()
-    print('mse:')
-    print(myXgboost.train_and_get_metrics(feature_list=feature_list))
-    print('predict:')
+    print('mse (mean average error) of xgboost is:', myXgboost.train_and_get_metrics(feature_list=feature_list))
+    # print(myXgboost.train_and_get_metrics(feature_list=feature_list))
+    print('This pet will be adopted in', myXgboost.predict(input=value_list)[0], 'days')
     # print(myXgboost.predict_by_file())
-    print(myXgboost.predict(input=value_list)[0])
+    # print(myXgboost.predict(input=value_list)[0])
 
 
 

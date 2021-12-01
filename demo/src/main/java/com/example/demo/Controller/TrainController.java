@@ -6,6 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -23,8 +31,9 @@ public class TrainController {
     public static void main(String[] args) throws Exception {
 //        String rlt = getAverage("{\"metadata\":\"Type\"}");
 //        System.out.println(rlt);
-        String rlt2 = predict("0a0e8c15b-1.jpg");
-        System.out.println(rlt2);
+//        String rlt2 = predict("0a0e8c15b-1.jpg");
+//        System.out.println(rlt2);
+        loadFirebase();
     }
 
     private TrainService trainService;
@@ -56,6 +65,46 @@ public class TrainController {
         }
         System.out.println(pred);
         return pred;
+    }
+
+    @GetMapping("api/firebase")
+    @ResponseBody
+    public static String loadFirebase() throws IOException {
+        String url = "https://cyq-dsci551-default-rtdb.firebaseio.com/color_labels.json";
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        try {
+
+//            HttpGet request = new HttpGet("https://httpbin.org/get");
+            HttpGet request = new HttpGet(url);
+            // add request headers
+            request.addHeader("custom-key", "mkyong");
+            request.addHeader(HttpHeaders.USER_AGENT, "Googlebot");
+
+            CloseableHttpResponse response = httpClient.execute(request);
+
+            try {
+
+                // Get HttpResponse Status
+//                System.out.println(response.getProtocolVersion());              // HTTP/1.1
+//                System.out.println(response.getStatusLine().getStatusCode());   // 200
+//                System.out.println(response.getStatusLine().getReasonPhrase()); // OK
+//                System.out.println(response.getStatusLine().toString());        // HTTP/1.1 200 OK
+
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    // return it as a String
+                    String result = EntityUtils.toString(entity);
+                    System.out.println("this is the result:");
+                    System.out.println(result);
+                }
+
+            } finally {
+                response.close();
+            }
+        } finally {
+            httpClient.close();
+        }
+        return "1";
     }
 
     @GetMapping("api/Average")
