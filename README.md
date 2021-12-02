@@ -2,9 +2,8 @@
 As the leading animal welfare platform in Malaysia, PetFinder.my has been maintaining a database of over 15000 animals. Recently, It is experimenting with AI tools to help homeless pets find people who are willing to adopt them. This project is yet another endeavor in the wave. As it is arguably true that animal adoption rates are strongly correlated to their online profiles,  this project aims to solve an analytics problem: Make a prediction of how quickly, if at all, a pet is adopted, given a fair amount of profile data consisting of both text data and non-text data. 
 # Architecture and Components
 The application was built using React as front end and SpringBoot as back end. Firebase was used to handle unstructured text data and MySQL was used to handle structured text data. Two machine learning algorithms: XGBoost and CNN were implemented to give prediction of adoption speed. Spark was used to perform data analysis tasks. Below is a flow chart showing the overview of the entire system architecture.
-
 ![] (https://ibb.co/QDZ6dGP)
-![](https://i.ibb.co/QDZ6dGP/System-architecture-3.png)
+https://i.ibb.co/QDZ6dGP/System-architecture-3.png
 1. Spring Boot submits a train or predict job to backend machine learning algorithm, after computation, machine learning algorithm returns the prediction and evaluation.
 2. After receiving the training requirement from Spring Boot, the XGBoost algorithm goes to the according path to read the train data.
 3.React accepts files uploaded by users and sends them to Spring Boot. it also sends data queries to Spring Boot. Spring Boot would use appropriate services to generate desired data and send it back to React. 
