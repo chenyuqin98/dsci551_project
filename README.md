@@ -3,7 +3,7 @@ As the leading animal welfare platform in Malaysia, PetFinder.my has been mainta
 # Architecture and Components
 The application was built using React as front end and SpringBoot as back end. Firebase was used to handle unstructured text data and MySQL was used to handle structured text data. Two machine learning algorithms: XGBoost and CNN were implemented to give prediction of adoption speed. Spark was used to perform data analysis tasks. Below is a flow chart showing the overview of the entire system architecture.
 
-![] (https://ibb.co/QDZ6dGP/System-architecture-3.png)
+![] (https://ibb.co/QDZ6dGP)
 1. Spring Boot submits a train or predict job to backend machine learning algorithm, after computation, machine learning algorithm returns the prediction and evaluation.
 2. After receiving the training requirement from Spring Boot, the XGBoost algorithm goes to the according path to read the train data.
 3.React accepts files uploaded by users and sends them to Spring Boot. it also sends data queries to Spring Boot. Spring Boot would use appropriate services to generate desired data and send it back to React. 
