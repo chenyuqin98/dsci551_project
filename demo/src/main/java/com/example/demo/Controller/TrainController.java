@@ -78,6 +78,7 @@ public class TrainController {
     public static String loadFirebase() throws IOException {
         String url = "https://cyq-dsci551-default-rtdb.firebaseio.com/color_labels.json";
         CloseableHttpClient httpClient = HttpClients.createDefault();
+        String result = "tmp";
         try {
 
 //            HttpGet request = new HttpGet("https://httpbin.org/get");
@@ -99,7 +100,7 @@ public class TrainController {
                 HttpEntity entity = response.getEntity();
                 if (entity != null) {
                     // return it as a String
-                    String result = EntityUtils.toString(entity);
+                     result = EntityUtils.toString(entity);
                     System.out.println("this is the result:");
                     System.out.println(result);
                 }
@@ -110,7 +111,7 @@ public class TrainController {
         } finally {
             httpClient.close();
         }
-        return "1";
+        return result;
 
     }
 
